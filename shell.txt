@@ -1,0 +1,13 @@
+from main.models import Job, ShellJob, PuppetJob, Client
+j = ShellJob(desc='uname -a', command='uname', args='-a') 
+j = PuppetJob(desc='reset ntp', module='ntp', data='Servers=kuku') 
+#j = ShellJob.objects.get(desc='uname -a')
+j.save
+j.id
+
+c = Client(hwaddr='11:22:33', name='22:33:44')
+
+
+for j in Job.objects.filter(id=1):
+  jsonpickle.encode(j)
+
