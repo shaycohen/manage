@@ -1,3 +1,6 @@
+DEFAULT_FILE_STORAGE = "/home/shay/tmp/manage/dug/git/jobs/init.pp"
+
+
 # Django settings for manage project.
 
 DEBUG = True
@@ -72,6 +75,7 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
+
 
 # List of finder classes that know how to find static files in
 # various locations.

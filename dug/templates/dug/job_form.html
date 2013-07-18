@@ -1,0 +1,17 @@
+<html><head>jobForm</head>
+<body>
+	{% if form.errors %}
+		ERROR: {{ form.errors|pluralize }}
+	{% endif %}
+	<form action="" method="post">
+		<table>
+			{{ form.as_table }}
+		</table>
+		{% csrf_token %}
+		<input type=submit>
+	</form>
+
+	{% if form.is_valid %}
+		Client: {{ client }}<BR>
+	{% endif %}
+</body></html>

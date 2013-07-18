@@ -1,35 +1,20 @@
-from django.shortcuts import render
 from django.http import HttpResponse
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.core.urlresolvers import reverse_lazy
-import jsonpickle
-#import json
-
 from dug.models import Job
-from dug.forms import ListClientJobs
-
-class JobCreate(CreateView):
-    model = Job
-    fields = ['desc','status']
-
-class JobUpdate(UpdateView):
-    model = Job
-    fields = ['desc','status']
-
-class JobDelete(DeleteView):
-    model = Job
-    success_url = reverse_lazy('jobs')
+from dug.models import Client
+import time
+import yaml
 
 def jobs(request, client):
-    var=Job.objects.get(client=client)
-#json   pvar=json.dumps(json.loads(jsonpickle.encode(var)), indent=4) 
-    return HttpResponse(jsonpickle.encode(var))
+	jobArr=Job.objects.filter(client=client)
+	response = {}
+	for job in jobArr:
+		response[job.id] = job.__dict__
+		response[job.id]['exec'] = job.execText()
+		response[job.id]['class'] = job._meta.object_name
+		response[job.id]['responseGetDate'] = time.mktime(time.gmtime())
+	return HttpResponse(yaml.dump(response, default_flow_style=False, allow_unicode=True, explicit_start=True, canonical=False), content_type='text/plain')
 
-def listClientJobs(request):
-    if request.method == 'POST': 
-       form = ListClientJobs(request.POST)
-       if form.is_valid(): 
-          return render(request, 'listclientjobs.html', {'form': form, 'client': form.data.get('client')})
-    else: 
-       form = ListClientJobs()
-       return render(request, 'listclientjobs.html', {'form': form})
+def latest(request, client):
+	latest = time.mktime(Client.objects.get(pk=client).jobs.latest().timestamp.timetuple())
+	return HttpResponse(yaml.dump(latest, default_flow_style=False, allow_unicode=True))
+

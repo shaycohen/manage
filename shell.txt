@@ -1,14 +1,26 @@
-from main.models import Job, ShellJob, PuppetJob, Client
-j = ShellJob(desc='uname -a', command='uname', args='-a') 
-j = PuppetJob(desc='reset ntp', module='ntp', data='Servers=kuku') 
-#j = ShellJob.objects.get(desc='uname -a')
-j.save
-j.id
+from dug.jobs import Job, ShellJob, PuppetJob, HieraJob
+from dug.models import Client
+
+j = ShellJob(name='uname -a', command='uname', args='-a')
+j.save()
+j = PuppetJob(name='restart ntp', module='ntp::service')
+j.save()
+j = HieraJob(name='ntp::servers', sourcetype='yaml')
+j.data = {'a':'b','c':'d'}
+j.save()
 
 c = Client(hwaddr='11:22:33', name='22:33:44')
+c.save()
+c.jobs.add(Job.objects.get(pk=1))
+c.jobs.add(Job.objects.get(pk=2))
+c.jobs.add(Job.objects.get(pk=3))
 
+#j = Job.objects.filter(pk=1)
 
-for j in Job.objects.filter(id=1):
-  jsonpickle.encode(j)
+#for j in Job.objects.filter(id=1):
+#  jsonpickle.encode(j)
 
-asd
+#from django.core.files.storage import default_storage
+#from django.core.files.base import ContentFile
+#path default_storage.open("git/jobs/init.pp")
+#path = default_storage.open("git/jobs/init.pp")
