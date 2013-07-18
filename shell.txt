@@ -11,3 +11,4 @@ c = Client(hwaddr='11:22:33', name='22:33:44')
 for j in Job.objects.filter(id=1):
   jsonpickle.encode(j)
 
+asd
